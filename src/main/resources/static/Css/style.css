@@ -1,0 +1,136 @@
+/* ===============================
+   RESET
+================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===============================
+   VARIABLES
+================================ */
+:root {
+    --color-primario: #1f2937;
+    --color-secundario: #2563eb;
+    --color-fondo: #f9fafb;
+    --color-blanco: #ffffff;
+    --color-borde: #e5e7eb;
+    --color-texto: #111827;
+}
+
+/* ===============================
+   BODY
+================================ */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    min-height: 100vh;
+}
+
+/* ===============================
+   HEADER
+================================ */
+header {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+}
+
+header p {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+/* ===============================
+   CONTENEDOR
+================================ */
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* ===============================
+   BOTONES
+================================ */
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.buttons button {
+    padding: 14px;
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.buttons button:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.buttons button:active {
+    transform: translateY(0);
+}
+
+/* ===============================
+   RESULTADO
+================================ */
+.resultado {
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    padding: 20px;
+    overflow-x: auto;
+    min-height: 200px;
+}
+
+/* ===============================
+   TABLA
+================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+thead {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-borde);
+    font-size: 0.9rem;
+}
+
+tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* ===============================
+   MENSAJES
+================================ */
+.mensaje {
+    text-align: center;
+    padding: 15px;
+    color: #6b7280;
+    font-style: italic;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Microservicio de Facturación</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>Sistema de Facturación</h1>
+    <p>Microservicio - Venta de Componentes de Computadora</p>
+</header>
+
+<div class="container">
+
+    <div class="buttons">
+        <button onclick="cargarDatos('facturas')">Facturas</button>
+        <button onclick="cargarDatos('detalles')">Detalle Factura</button>
+        <button onclick="cargarDatos('pagos')">Pagos</button>
+        <button onclick="cargarDatos('reembolsos')">Reembolsos</button>
+        <button onclick="cargarDatos('eventos')">Eventos Factura</button>
+    </div>
+
+    <div class="resultado" id="resultado">
+        <div class="mensaje">
+            Selecciona una tabla para mostrar los datos
+        </div>
+    </div>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
