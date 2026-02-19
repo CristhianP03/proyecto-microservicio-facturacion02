@@ -134,3 +134,22 @@ tbody tr:hover {
     color: #6b7280;
     font-style: italic;
 }
+
+.seccion {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.seccion h2 {
+    margin-bottom: 10px;
+}
+
+.seccion input {
+    padding: 8px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+

@@ -1,7 +1,7 @@
 package com.example.microserviciodemo01.Controller;
 
-import com.example.microserviciodemo01.models.Factura;
 import com.example.microserviciodemo01.Service.FacturaService;
+import com.example.microserviciodemo01.models.Factura;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +16,15 @@ public class FacturaController {
         this.facturaService = facturaService;
     }
 
+    @GetMapping("/{idFactura}")
+    public Factura obtenerFacturaPorId(
+            @PathVariable Integer idFactura) {
+
+        return facturaService.obtenerPorId(idFactura);
+    }
+
     @GetMapping
-    public List<Factura> obtenerFacturas() {
+    public List<Factura> obtenerTodas() {
         return facturaService.obtenerTodas();
     }
 }

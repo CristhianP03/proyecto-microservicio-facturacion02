@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pagos")
+@RequestMapping("/facturas/{idFactura}/pagos")
 public class PagoController {
 
     private final PagoService pagoService;
@@ -17,7 +17,10 @@ public class PagoController {
     }
 
     @GetMapping
-    public List<Pago> obtenerPagos() {
-        return pagoService.obtenerTodos();
+    public List<Pago> obtenerPorFactura(
+            @PathVariable Integer idFactura) {
+
+        return pagoService.obtenerPorFactura(idFactura);
     }
 }
+

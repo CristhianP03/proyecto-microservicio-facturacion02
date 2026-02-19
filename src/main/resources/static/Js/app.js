@@ -1,64 +1,99 @@
-// Función principal para cargar datos desde un endpoint
-async function cargarDatos(endpoint) {
-    const resultado = document.getElementById("resultado");
-    resultado.innerHTML = '<div class="mensaje">Cargando datos...</div>';
+const API = "http://localhost:8081";
 
-    try {
-        const response = await fetch(`/${endpoint}`);
-        if (!response.ok) {
-            throw new Error("Error al obtener los datos");
-        }
+// =============================
+// CREAR VENTA
+// =============================
+async function crearVenta() {
+    const idCliente = document.getElementById("idCliente").value;
+    const total = document.getElementById("totalVenta").value;
 
-        const data = await response.json();
+    const venta = {
+        idCliente: parseInt(idCliente),
+        total: parseFloat(total)
+    };
 
-        if (!Array.isArray(data) || data.length === 0) {
-            resultado.innerHTML = '<div class="mensaje">No hay datos para mostrar</div>';
-            return;
-        }
+    const response = await fetch(`${API}/ventas`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(venta)
+    });
 
-        resultado.innerHTML = generarTabla(data);
-
-    } catch (error) {
-        resultado.innerHTML = `<div class="mensaje">Error: ${error.message}</div>`;
-    }
+    const data = await response.json();
+    mostrarResultado([data]);
 }
 
-// Función para generar la tabla HTML
-function generarTabla(data) {
+// =============================
+// LISTAR VENTAS
+// =============================
+async function listarVentas() {
+    const response = await fetch(`${API}/ventas`);
+    const data = await response.json();
+    mostrarResultado(data);
+}
+
+// =============================
+// GENERAR FACTURA
+// =============================
+async function generarFactura() {
+    const idVenta = document.getElementById("idVentaFactura").value;
+
+    const response = await fetch(`${API}/facturas/generar/${idVenta}`, {
+        method: "POST"
+    });
+
+    const data = await response.json();
+    mostrarResultado([data]);
+}
+
+// =============================
+// BUSCAR FACTURAS POR VENTA
+// =============================
+async function buscarFacturasPorVenta() {
+    const idVenta = document.getElementById("idVentaBuscar").value;
+
+    const response = await fetch(`${API}/facturas/venta/${idVenta}`);
+    const data = await response.json();
+    mostrarResultado(data);
+}
+
+// =============================
+// GENERAR TABLA
+// =============================
+function mostrarResultado(data) {
+    const resultado = document.getElementById("resultado");
+
+    if (!Array.isArray(data) || data.length === 0) {
+        resultado.innerHTML = '<div class="mensaje">No hay datos</div>';
+        return;
+    }
+
     const columnas = Object.keys(data[0]);
 
-    let html = '<table>';
-    html += '<thead><tr>';
+    let html = '<table><thead><tr>';
     columnas.forEach(col => html += `<th>${col}</th>`);
     html += '</tr></thead><tbody>';
 
     data.forEach(fila => {
         html += '<tr>';
-        columnas.forEach(col => html += `<td>${formatearSiEsFecha(fila[col])}</td>`);
+        columnas.forEach(col => {
+            html += `<td>${formatearSiEsFecha(fila[col])}</td>`;
+        });
         html += '</tr>';
     });
 
     html += '</tbody></table>';
-    return html;
+    resultado.innerHTML = html;
 }
 
-// Función estricta: solo formatea valores que son fechas ISO 8601
+// =============================
+// FORMATEO FECHA
+// =============================
 function formatearSiEsFecha(valor) {
-    if (valor === null || valor === undefined) return '';
+    if (!valor) return "";
 
-    // Detecta solo strings que coincidan con formato ISO 8601 de timestamp
-    if (typeof valor === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(valor)) {
-        const fecha = new Date(valor);
-        return fecha.toLocaleString('es-ES', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
+    if (typeof valor === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(valor)) {
+        return new Date(valor).toLocaleString();
     }
 
-    // Si no es fecha, se devuelve tal cual
     return valor;
 }

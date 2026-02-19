@@ -15,8 +15,9 @@ public class DetalleFactura {
     @Column(name = "id_detalle")
     private Integer idDetalle;
 
-    @Column(name = "id_factura", nullable = false)
-    private Integer idFactura;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_factura", nullable = false)
+    private Factura factura;
 
     @Column(name = "id_producto", nullable = false)
     private Integer idProducto;
@@ -27,13 +28,12 @@ public class DetalleFactura {
     @Column(name = "categoria_producto")
     private String categoriaProducto;
 
-    @Column(name = "precio_unitario", nullable = false)
+    @Column(name = "precio_unitario", nullable = false, precision = 15, scale = 2)
     private BigDecimal precioUnitario;
 
     @Column(nullable = false)
     private Integer cantidad;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal total;
 }
-

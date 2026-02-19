@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reembolsos")
+@RequestMapping("/facturas/{idFactura}/reembolsos")
 public class ReembolsoController {
 
     private final ReembolsoService reembolsoService;
@@ -17,7 +17,10 @@ public class ReembolsoController {
     }
 
     @GetMapping
-    public List<Reembolso> obtenerReembolsos() {
-        return reembolsoService.obtenerTodos();
+    public List<Reembolso> obtenerPorFactura(
+            @PathVariable Integer idFactura) {
+
+        return reembolsoService.obtenerPorFactura(idFactura);
     }
 }
+

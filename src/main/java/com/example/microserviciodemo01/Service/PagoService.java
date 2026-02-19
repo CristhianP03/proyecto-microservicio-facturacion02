@@ -18,4 +18,8 @@ public class PagoService {
     public List<Pago> obtenerTodos() {
         return pagoRepository.findAll();
     }
+
+    public List<Pago> obtenerPorFactura(Integer idFactura) {
+        return pagoRepository.findByIdFactura(idFactura);
+    }
 }

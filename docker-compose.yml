@@ -1,0 +1,24 @@
+services:
+
+  postgres_facturacion:
+    image: postgres:15
+    container_name: postgres_facturacion
+    environment:
+      POSTGRES_DB: microservicio_facturacion
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  microservicio-demo01:
+    build: .
+    container_name: microservicio-demo01
+    depends_on:
+      - postgres_facturacion
+    ports:
+      - "8081:8081"
+
+volumes:
+  postgres_data:

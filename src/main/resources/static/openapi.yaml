@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info:
+  title: Microservicio de Facturación
+  description: API del microservicio de facturación
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8081
+
+paths:
+  /facturas:
+    get:
+      summary: Obtener todas las facturas
+      operationId: obtenerFacturas
+      responses:
+        '200':
+          description: Lista de facturas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Factura'
+
+components:
+  schemas:
+    Factura:
+      type: object
+      properties:
+        idFactura:
+          type: integer
+        numeroFactura:
+          type: string
+        nombreCliente:
+          type: string
+        total:
+          type: number
+          format: double
+        estado:
+          type: string

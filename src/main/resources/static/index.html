@@ -2,29 +2,45 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Microservicio de Facturación</title>
+    <title>Sistema de Facturación</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header>
     <h1>Sistema de Facturación</h1>
-    <p>Microservicio - Venta de Componentes de Computadora</p>
+    <p>Microservicio - Venta de Componentes</p>
 </header>
 
 <div class="container">
 
-    <div class="buttons">
-        <button onclick="cargarDatos('facturas')">Facturas</button>
-        <button onclick="cargarDatos('detalles')">Detalle Factura</button>
-        <button onclick="cargarDatos('pagos')">Pagos</button>
-        <button onclick="cargarDatos('reembolsos')">Reembolsos</button>
-        <button onclick="cargarDatos('eventos')">Eventos Factura</button>
+    <div class="seccion">
+        <h2>Crear Venta</h2>
+        <input type="number" id="idCliente" placeholder="ID Cliente">
+        <input type="number" id="totalVenta" placeholder="Total Venta">
+        <button onclick="crearVenta()">Crear Venta</button>
+    </div>
+
+    <div class="seccion">
+        <h2>Ventas</h2>
+        <button onclick="listarVentas()">Listar Ventas</button>
+    </div>
+
+    <div class="seccion">
+        <h2>Generar Factura</h2>
+        <input type="number" id="idVentaFactura" placeholder="ID Venta">
+        <button onclick="generarFactura()">Generar Factura</button>
+    </div>
+
+    <div class="seccion">
+        <h2>Facturas por Venta</h2>
+        <input type="number" id="idVentaBuscar" placeholder="ID Venta">
+        <button onclick="buscarFacturasPorVenta()">Buscar</button>
     </div>
 
     <div class="resultado" id="resultado">
         <div class="mensaje">
-            Selecciona una tabla para mostrar los datos
+            Sistema listo
         </div>
     </div>
 

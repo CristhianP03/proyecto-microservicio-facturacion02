@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "facturas")
@@ -15,6 +16,17 @@ public class Factura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_factura")
     private Integer idFactura;
+
+    // 🔹 RELACIÓN CON VENTA
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_venta", nullable = false)
+    private Venta venta;
+
+    // 🔹 RELACIÓN CON DETALLES
+    @OneToMany(mappedBy = "factura",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<DetalleFactura> detalles;
 
     @Column(name = "id_pedido", nullable = false)
     private Integer idPedido;
@@ -43,13 +55,13 @@ public class Factura {
     @Column(name = "estado", nullable = false)
     private String estado;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal subtotal;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal impuestos;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal total;
 
     @Column(nullable = false, length = 3)
@@ -61,4 +73,3 @@ public class Factura {
     @Column(name = "fecha_actualizacion", insertable = false)
     private LocalDateTime fechaActualizacion;
 }
-

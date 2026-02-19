@@ -18,4 +18,9 @@ public class ReembolsoService {
     public List<Reembolso> obtenerTodos() {
         return reembolsoRepository.findAll();
     }
+
+    public List<Reembolso> obtenerPorFactura(Integer idFactura) {
+        return reembolsoRepository.obtenerPorFactura(idFactura);
+    }
 }
+
