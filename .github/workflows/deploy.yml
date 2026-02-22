@@ -40,7 +40,8 @@ jobs:
           host: ${{ secrets.AZURE_IP }}
           username: azureuser
           key: ${{ secrets.AZURE_SSH_KEY }}
-          script: |
-            cd proyecto-azure
-            docker-compose pull
-            docker-compose up -d
+	script: |
+  	cd proyecto-azure
+  	docker-compose down
+  	docker-compose pull
+  	docker-compose up -d --force-recreate
