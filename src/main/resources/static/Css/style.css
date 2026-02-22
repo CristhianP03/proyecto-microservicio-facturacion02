@@ -1,155 +1,211 @@
-/* ===============================
-   RESET
-================================ */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* ===============================
-   VARIABLES
-================================ */
 :root {
-    --color-primario: #1f2737;
-    --color-secundario: #2563eb;
-    --color-fondo: #f9fafb;
-    --color-blanco: #ffffff;
-    --color-borde: #e5e7eb;
-    --color-texto: #111827;
+    /* Paleta Profesional */
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --success: #10b981;
+    --success-dark: #059669;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
 }
 
-/* ===============================
-   BODY
-================================ */
+/* Reset Estricto */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--color-fondo);
-    color: var(--color-texto);
-    min-height: 100vh;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg);
+    color: var(--text-main);
+    line-height: 1.6;
 }
 
-/* ===============================
-   HEADER
-================================ */
-header {
-    background-color: var(--color-primario);
-    color: var(--color-blanco);
-    padding: 20px;
+/* Header */
+.main-header {
+    background: #0f172a;
+    color: white;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    border-bottom: 4px solid var(--primary);
+}
+
+.main-header h1 { font-size: 2.2rem; letter-spacing: -0.025em; }
+.main-header h1 span { color: var(--primary); }
+.main-header p { opacity: 0.8; font-weight: 300; margin-top: 0.5rem; }
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Cards */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: #fafafa;
+}
+
+.card-header h2 { font-size: 1.1rem; color: var(--text-main); font-weight: 700; }
+.card-body { padding: 1.5rem; flex-grow: 1; }
+
+/* Forms & Inputs */
+.form-group { margin-bottom: 1.25rem; }
+.inline-group { display: flex; gap: 0.5rem; align-items: flex-end; }
+
+label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Buttons System */
+.btn-primary, .btn-secondary, .btn-outline, .btn-success, .btn-danger {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     text-align: center;
 }
 
-header h1 {
-    font-size: 1.8rem;
+.btn-primary { background: var(--primary); color: white; width: 100%; }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+.btn-secondary { background: #f1f5f9; color: var(--text-main); border: 1px solid var(--border); margin-bottom: 0.5rem; width: 100%; }
+.btn-secondary:hover { background: #e2e8f0; }
+
+.btn-success { background: var(--success); color: white; width: 100%; }
+.btn-success:hover { background: var(--success-dark); }
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+.btn-outline:hover { background: #eff6ff; }
+
+/* Tables (Core del Panel de Resultados) */
+.results-container {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    padding: 0; /* Para que el header tenga fondo propio */
+    overflow: hidden;
 }
 
-header p {
-    margin-top: 5px;
-    font-size: 0.9rem;
-    opacity: 0.85;
+.results-header {
+    padding: 1.25rem;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* ===============================
-   CONTENEDOR
-================================ */
-.container {
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 20px;
-}
+.table-responsive { overflow-x: auto; padding: 1rem; }
 
-/* ===============================
-   BOTONES
-================================ */
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.buttons button {
-    padding: 14px;
-    background-color: var(--color-secundario);
-    color: var(--color-blanco);
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.buttons button:hover {
-    background-color: #1d4ed8;
-    transform: translateY(-2px);
-}
-
-.buttons button:active {
-    transform: translateY(0);
-}
-
-/* ===============================
-   RESULTADO
-================================ */
-.resultado {
-    background-color: var(--color-blanco);
-    border: 1px solid var(--color-borde);
-    border-radius: 8px;
-    padding: 20px;
-    overflow-x: auto;
-    min-height: 200px;
-}
-
-/* ===============================
-   TABLA
-================================ */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    min-width: 600px;
 }
 
-thead {
-    background-color: var(--color-primario);
-    color: var(--color-blanco);
-}
-
-th, td {
-    padding: 10px;
+th {
     text-align: left;
-    border-bottom: 1px solid var(--color-borde);
+    padding: 1rem;
+    background: #fdfdfd;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--border);
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
     font-size: 0.9rem;
+    color: var(--text-main);
 }
 
-tbody tr:hover {
-    background-color: #f1f5f9;
+tr:hover { background-color: #fcfcfc; }
+
+/* Status Badges para Lógica de Negocio */
+.badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
-/* ===============================
-   MENSAJES
-================================ */
+/* Clases dinámicas para estados de Factura/Pago */
+.badge.success { background: #dcfce7; color: #166534; }
+.badge.warning { background: #fef3c7; color: #92400e; }
+.badge.error { background: #fee2e2; color: #991b1b; }
+.badge.info { background: #e0f2fe; color: #075985; }
+
+/* Mensajes de Feedback */
 .mensaje {
-    text-align: center;
-    padding: 15px;
-    color: #6b7280;
-    font-style: italic;
-}
-
-.seccion {
-    background: white;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 1rem;
     border-radius: 8px;
-    border: 1px solid #e5e7eb;
+    margin: 1rem;
+    text-align: center;
+    font-weight: 500;
 }
+.mensaje.error { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+.mensaje.info { background: #eff6ff; color: #1e40af; border: 1px solid #dbeafe; }
 
-.seccion h2 {
-    margin-bottom: 10px;
+.empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 4rem 2rem;
 }
-
-.seccion input {
-    padding: 8px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-}
-

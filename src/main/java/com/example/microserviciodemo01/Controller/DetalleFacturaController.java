@@ -18,32 +18,28 @@ public class DetalleFacturaController {
         this.detalleFacturaService = detalleFacturaService;
     }
 
-    // Obtener todos los detalles de una factura
     @GetMapping
-    public List<DetalleFactura> obtenerPorFactura(
-            @PathVariable Integer idFactura) {
-
-        return detalleFacturaService.obtenerPorFactura(idFactura);
+    public ResponseEntity<List<DetalleFactura>> obtenerPorFactura(@PathVariable Integer idFactura) {
+        List<DetalleFactura> detalles = detalleFacturaService.obtenerPorFactura(idFactura);
+        return ResponseEntity.ok(detalles);
     }
 
-    // Crear detalle
     @PostMapping
     public ResponseEntity<DetalleFactura> crearDetalle(
             @PathVariable Integer idFactura,
             @RequestBody DetalleFactura detalle) {
 
-        DetalleFactura nuevo =
-                detalleFacturaService.crearDetalle(idFactura, detalle);
-
+        // El Service debe encargarse de que el detalle se vincule al ID de la factura del path.
+        DetalleFactura nuevo = detalleFacturaService.crearDetalle(idFactura, detalle);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
-    // Eliminar detalle
     @DeleteMapping("/{idDetalle}")
     public ResponseEntity<Void> eliminarDetalle(
             @PathVariable Integer idFactura,
             @PathVariable Integer idDetalle) {
 
+        // Análisis Estricto: Se pasan ambos IDs para validar que el detalle realmente pertenezca a esa factura.
         detalleFacturaService.eliminarDetalle(idFactura, idDetalle);
         return ResponseEntity.noContent().build();
     }

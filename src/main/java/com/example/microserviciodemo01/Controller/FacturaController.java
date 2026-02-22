@@ -2,6 +2,7 @@ package com.example.microserviciodemo01.Controller;
 
 import com.example.microserviciodemo01.Service.FacturaService;
 import com.example.microserviciodemo01.models.Factura;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +18,15 @@ public class FacturaController {
     }
 
     @GetMapping("/{idFactura}")
-    public Factura obtenerFacturaPorId(
-            @PathVariable Integer idFactura) {
-
-        return facturaService.obtenerPorId(idFactura);
+    public ResponseEntity<Factura> obtenerFacturaPorId(@PathVariable Integer idFactura) {
+        // Análisis Estricto: El service lanza excepción si no existe, aquí retornamos 200 OK
+        return ResponseEntity.ok(facturaService.obtenerPorId(idFactura));
     }
 
     @GetMapping
-    public List<Factura> obtenerTodas() {
-        return facturaService.obtenerTodas();
+    public ResponseEntity<List<Factura>> obtenerTodas() {
+        return ResponseEntity.ok(facturaService.obtenerTodas());
     }
+
+    // Nota: El método de generar factura se encuentra en VentaController para mantener el flujo de origen.
 }

@@ -2,50 +2,78 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Facturación</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FacturaPro | Sistema Contable</title>
+    <link rel="stylesheet" href="/Css/style.css">
 </head>
 <body>
 
-<header>
-    <h1>Sistema de Facturación</h1>
-    <p>Microservicio - Venta de Componentes</p>
+<header class="main-header">
+    <div class="header-content">
+        <h1>Factura<span>Pro</span></h1>
+        <p>Gestión Transaccional de Ventas y Cobros</p>
+    </div>
 </header>
 
-<div class="container">
+<main class="container">
+    <div class="dashboard-grid">
+        <section class="card">
+            <header class="card-header"><h2>1. Registro de Venta</h2></header>
+            <form id="formCrearVenta" class="card-body">
+                <div class="form-group">
+                    <label>ID Cliente</label>
+                    <input type="number" id="idCliente" required placeholder="Ej. 101">
+                </div>
+                <div class="form-group">
+                    <label>Monto Total ($)</label>
+                    <input type="number" id="totalVenta" step="0.01" required placeholder="0.00">
+                </div>
+                <button type="submit" class="btn-primary">Registrar Venta</button>
+            </form>
+        </section>
 
-    <div class="seccion">
-        <h2>Crear Venta</h2>
-        <input type="number" id="idCliente" placeholder="ID Cliente">
-        <input type="number" id="totalVenta" placeholder="Total Venta">
-        <button onclick="crearVenta()">Crear Venta</button>
+        <section class="card">
+            <header class="card-header"><h2>2. Documentos</h2></header>
+            <div class="card-body">
+                <form id="formGenerarFactura" class="form-group">
+                    <label>Generar Factura desde Venta</label>
+                    <div class="inline-group">
+                        <input type="number" id="idVentaFactura" placeholder="ID Venta" required>
+                        <button type="submit" class="btn-outline">Generar</button>
+                    </div>
+                </form>
+                <button class="btn-secondary" id="btnListarVentas">Ver Todas las Ventas</button>
+                <button class="btn-secondary" id="btnListarFacturas">Ver Todas las Facturas</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <header class="card-header"><h2>3. Registro de Pago</h2></header>
+            <form id="formRegistrarPago" class="card-body">
+                <div class="form-group">
+                    <label>ID Factura</label>
+                    <input type="number" id="idFacturaPago" required placeholder="ID Factura">
+                </div>
+                <div class="form-group">
+                    <label>Monto a Pagar ($)</label>
+                    <input type="number" id="montoPago" step="0.01" required placeholder="0.00">
+                </div>
+                <button type="submit" class="btn-success">Confirmar Pago</button>
+            </form>
+        </section>
     </div>
 
-    <div class="seccion">
-        <h2>Ventas</h2>
-        <button onclick="listarVentas()">Listar Ventas</button>
-    </div>
-
-    <div class="seccion">
-        <h2>Generar Factura</h2>
-        <input type="number" id="idVentaFactura" placeholder="ID Venta">
-        <button onclick="generarFactura()">Generar Factura</button>
-    </div>
-
-    <div class="seccion">
-        <h2>Facturas por Venta</h2>
-        <input type="number" id="idVentaBuscar" placeholder="ID Venta">
-        <button onclick="buscarFacturasPorVenta()">Buscar</button>
-    </div>
-
-    <div class="resultado" id="resultado">
-        <div class="mensaje">
-            Sistema listo
+    <section class="results-container">
+        <header class="results-header">
+            <h3>Panel de Control y Resultados</h3>
+            <span id="status-badge" class="badge">Sincronizado</span>
+        </header>
+        <div id="resultado" class="table-responsive">
+            <p class="empty-state">Inicie una operación para ver resultados.</p>
         </div>
-    </div>
+    </section>
+</main>
 
-</div>
-
-<script src="js/app.js"></script>
+<script src="/Js/app.js"></script>
 </body>
 </html>
