@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservicio-facturacion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservicio-facturacion
+  template:
+    metadata:
+      labels:
+        app: microservicio-facturacion
+    spec:
+      containers:
+        - name: microservicio-facturacion
+          image: rccristianpacheco.azurecr.io/facturacion:latest
+          ports:
+            - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservicio-facturacion-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: microservicio-facturacion
+  ports:
+    - port: 80
+      targetPort: 8081
