@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: microservicio-facturacion
-          image: rccristianpacheco.azurecr.io/facturacion:latest
+          image: rccristhianpacheco.azurecr.io/facturacion:latest
           ports:
             - containerPort: 8081
 ---
