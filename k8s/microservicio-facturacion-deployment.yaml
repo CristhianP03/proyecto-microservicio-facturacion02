@@ -12,6 +12,8 @@ spec:
       labels:
         app: microservicio-facturacion
     spec:
+      imagePullSecrets:
+        - name: acr-secret
       containers:
         - name: microservicio-facturacion
           image: rccristhianpacheco.azurecr.io/facturacion:latest
