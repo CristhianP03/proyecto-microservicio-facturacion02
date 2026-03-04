@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservicio-consumo-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: microservicio-consumo
+  ports:
+    - port: 80
+      targetPort: 8085

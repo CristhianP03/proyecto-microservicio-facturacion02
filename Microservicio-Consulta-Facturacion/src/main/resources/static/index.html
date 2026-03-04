@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Consumo Facturación</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: Arial, sans-serif; background:#f0f2f5; }
+        header { background:#1a237e; color:white; padding:20px 40px; }
+        header h1 span { color:#90caf9; }
+        .container { max-width:1200px; margin:30px auto; padding:0 20px; }
+        .card { background:white; border-radius:8px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+        .btn { padding:10px 20px; border:none; border-radius:5px; cursor:pointer; margin:5px; font-size:14px; }
+        .btn-primary { background:#1a237e; color:white; }
+        .btn-success { background:#2e7d32; color:white; }
+        input { padding:8px; border:1px solid #ddd; border-radius:5px; margin:5px; }
+        table { width:100%; border-collapse:collapse; margin-top:15px; }
+        th { background:#1a237e; color:white; padding:10px; text-align:left; }
+        td { padding:8px 10px; border-bottom:1px solid #eee; }
+        tr:hover { background:#f5f5f5; }
+        .empty { color:#999; text-align:center; padding:20px; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Consumo<span> Microservicio</span></h1>
+    <p>Microservicio Consumidor de Facturación</p>
+</header>
+<div class="container">
+    <div class="card">
+        <h2>Consultas</h2><br>
+        <button class="btn btn-primary" onclick="listarVentas()">Ver Ventas</button>
+        <button class="btn btn-primary" onclick="listarFacturas()">Ver Facturas</button>
+        <br><br>
+        <input type="number" id="idFactura" placeholder="ID Factura">
+        <button class="btn btn-success" onclick="buscarFactura()">Buscar Factura</button>
+        <button class="btn btn-success" onclick="buscarPagos()">Ver Pagos</button>
+    </div>
+    <div class="card">
+        <h3>Resultados</h3>
+        <div id="resultado"><p class="empty">Selecciona una operación.</p></div>
+    </div>
+</div>
+<script>
+    const BASE = "/consumo";
+    async function llamar(url) {
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("Error " + res.status);
+            return await res.json();
+        } catch(e) {
+            document.getElementById("resultado").innerHTML = `<p class="empty">Error: ${e.message}</p>`;
+            return null;
+        }
+    }
+    function renderTabla(data) {
+        if (!data || data.length === 0) { document.getElementById("resultado").innerHTML = `<p class="empty">Sin resultados.</p>`; return; }
+        const cols = Object.keys(data[0]);
+        let html = `<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>`;
+        data.forEach(row => { html += `<tr>${cols.map(c=>`<td>${row[c]??""}</td>`).join("")}</tr>`; });
+        html += `</tbody></table>`;
+        document.getElementById("resultado").innerHTML = html;
+    }
+    function renderObjeto(obj) {
+        if (!obj) return;
+        let html = `<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody>`;
+        Object.keys(obj).forEach(c => { html += `<tr><td><strong>${c}</strong></td><td>${obj[c]??""}</td></tr>`; });
+        html += `</tbody></table>`;
+        document.getElementById("resultado").innerHTML = html;
+    }
+    async function listarVentas() { const d = await llamar(`${BASE}/ventas`); if(d) renderTabla(d); }
+    async function listarFacturas() { const d = await llamar(`${BASE}/facturas`); if(d) renderTabla(d); }
+    async function buscarFactura() { const id = document.getElementById("idFactura").value; if(!id) return alert("Ingresa ID"); const d = await llamar(`${BASE}/facturas/${id}`); if(d) renderObjeto(d); }
+    async function buscarPagos() { const id = document.getElementById("idFactura").value; if(!id) return alert("Ingresa ID"); const d = await llamar(`${BASE}/facturas/${id}/pagos`); if(d) renderTabla(d); }
+</script>
+</body>
+</html>

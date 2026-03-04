@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservicio-consumo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservicio-consumo
+  template:
+    metadata:
+      labels:
+        app: microservicio-consumo
+    spec:
+      imagePullSecrets:
+        - name: acr-secret
+      containers:
+        - name: microservicio-consumo
+          image: rccristhianpacheco.azurecr.io/microservicio-consumo:latest
+          ports:
+            - containerPort: 8085
