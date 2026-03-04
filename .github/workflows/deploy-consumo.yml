@@ -21,6 +21,7 @@ jobs:
 
       - name: 3. Compilar con Maven
         run: mvn clean package -DskipTests
+        working-directory: ./Microservicio-Consulta-Facturacion
 
       - name: 4. Login en Azure Container Registry
         uses: azure/docker-login@v1
@@ -31,7 +32,7 @@ jobs:
 
       - name: 5. Build y Push de imagen a ACR
         run: |
-          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/microservicio-consumo:latest .
+          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/microservicio-consumo:latest ./Microservicio-Consulta-Facturacion
           docker push ${{ secrets.ACR_LOGIN_SERVER }}/microservicio-consumo:latest
 
       - name: 6. Login en Azure
@@ -49,7 +50,7 @@ jobs:
         uses: azure/k8s-deploy@v1
         with:
           manifests: |
-            k8s/consumo-deployment.yaml
-            k8s/consumo-service.yaml
+            Microservicio-Consulta-Facturacion/k8s/consumo-deployment.yaml
+            Microservicio-Consulta-Facturacion/k8s/consumo-service.yaml
           images: |
             ${{ secrets.ACR_LOGIN_SERVER }}/microservicio-consumo:latest
