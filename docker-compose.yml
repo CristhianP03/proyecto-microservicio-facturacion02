@@ -1,5 +1,4 @@
 services:
-
   postgres_facturacion:
     image: postgres:15
     container_name: postgres_facturacion
@@ -11,14 +10,25 @@ services:
       - "5435:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d microservicio_facturacion"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   microservicio-demo01:
     build: .
     container_name: microservicio-demo01
     depends_on:
-      - postgres_facturacion
+      postgres_facturacion:
+        condition: service_healthy
     ports:
       - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_facturacion:5432/microservicio_facturacion
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
+    restart: on-failure
 
 volumes:
   postgres_data:

@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "detalle_factura")
+@Table(name = "detalle_venta")
 @Data
-public class DetalleFactura {
+public class DetalleVenta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +17,9 @@ public class DetalleFactura {
     private Integer idDetalle;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_factura", nullable = false)
+    @JoinColumn(name = "id_venta", nullable = false)
     @JsonIgnore
-    private Factura factura;
+    private Venta venta;
 
     @Column(name = "id_producto", nullable = false)
     private Integer idProducto;

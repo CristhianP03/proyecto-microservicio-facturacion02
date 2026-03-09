@@ -1,78 +1,210 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FacturaPro | Sistema Contable</title>
-    <link rel="stylesheet" href="/Css/style.css">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CompuTech — Punto de Venta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/Css/styles.css"/>
 </head>
 <body>
 
-<header class="main-header">
-    <div class="header-content">
-        <h1>Factura<span>Pro</span></h1>
-        <p>Gestión Transaccional de Ventas y Cobros</p>
-    </div>
-</header>
-
-<main class="container">
-    <div class="dashboard-grid">
-        <section class="card">
-            <header class="card-header"><h2>1. Registro de Venta</h2></header>
-            <form id="formCrearVenta" class="card-body">
-                <div class="form-group">
-                    <label>ID Cliente</label>
-                    <input type="number" id="idCliente" required placeholder="Ej. 101">
-                </div>
-                <div class="form-group">
-                    <label>Monto Total ($)</label>
-                    <input type="number" id="totalVenta" step="0.01" required placeholder="0.00">
-                </div>
-                <button type="submit" class="btn-primary">Registrar Venta</button>
-            </form>
-        </section>
-
-        <section class="card">
-            <header class="card-header"><h2>2. Documentos</h2></header>
-            <div class="card-body">
-                <form id="formGenerarFactura" class="form-group">
-                    <label>Generar Factura desde Venta</label>
-                    <div class="inline-group">
-                        <input type="number" id="idVentaFactura" placeholder="ID Venta" required>
-                        <button type="submit" class="btn-outline">Generar</button>
-                    </div>
-                </form>
-                <button class="btn-secondary" id="btnListarVentas">Ver Todas las Ventas</button>
-                <button class="btn-secondary" id="btnListarFacturas">Ver Todas las Facturas</button>
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="ls">
+    <div class="lbg"></div>
+    <div class="lw">
+        <div class="lb">
+            <div class="lb-name">Compu<span>Tech</span></div>
+            <div class="lb-sub">Sistema de Punto de Venta para<br/>Tienda de Componentes de Computadora</div>
+            <div class="lb-pills">
+                <span class="lp">🖥️ Componentes PC</span>
+                <span class="lp">🧾 Facturación</span>
+                <span class="lp">📦 Inventario</span>
+                <span class="lp">👥 Clientes</span>
             </div>
-        </section>
+        </div>
+        <div class="lc">
+            <div class="lc-title">Iniciar Sesión</div>
+            <div class="lc-sub">Ingresa tus credenciales de cajero</div>
+            <div class="ff"><label class="fl">Usuario</label>
+                <input class="fi" type="text" id="lu" placeholder="cajero1" autocomplete="off"/>
+            </div>
+            <div class="ff"><label class="fl">Contraseña</label>
+                <input class="fi" type="password" id="lp2" placeholder="••••••"/>
+            </div>
+            <div style="margin-top:20px">
+                <button class="btn-norm" onclick="doLogin(false)">→ Ingresar al Sistema</button>
+            </div>
+            <div class="ldiv">
+                <div class="ldl"></div><span class="ldt">o</span><div class="ldl"></div>
+            </div>
+            <button class="btn-test" onclick="doLogin(true)">🧪 Entrar en Modo Prueba</button>
+            <div style="text-align:center;margin-top:8px">
+                <span class="login-hint">Modo prueba: datos de ejemplo · facturas aisladas · no afecta inventario</span>
+            </div>
+            <div class="lerr" id="lerr"></div>
+        </div>
+    </div>
+</div>
 
-        <section class="card">
-            <header class="card-header"><h2>3. Registro de Pago</h2></header>
-            <form id="formRegistrarPago" class="card-body">
-                <div class="form-group">
-                    <label>ID Factura</label>
-                    <input type="number" id="idFacturaPago" required placeholder="ID Factura">
-                </div>
-                <div class="form-group">
-                    <label>Monto a Pagar ($)</label>
-                    <input type="number" id="montoPago" step="0.01" required placeholder="0.00">
-                </div>
-                <button type="submit" class="btn-success">Verify Pay</button>
-            </form>
-        </section>
+<!-- ══════════════ MAIN ══════════════ -->
+<div id="ms">
+
+    <div class="tbanner" id="tb">
+        🧪 MODO PRUEBA — Datos de ejemplo · Facturas aisladas · El endpoint de inventario rechaza estas ventas
     </div>
 
-    <section class="results-container">
-        <header class="results-header">
-            <h3>Panel de Control y Resultados</h3>
-            <span id="status-badge" class="badge">Sincronizado</span>
-        </header>
-        <div id="resultado" class="table-responsive">
-            <p class="empty-state">Inicie una operación para ver resultados.</p>
+    <header class="hdr">
+        <div class="hl">
+            <div class="hlogo">🖥️</div>
+            <div class="htitle">Compu<span>Tech</span></div>
         </div>
-    </section>
-</main>
+        <div class="hcenter">Tienda de Componentes de Computadora</div>
+        <div class="hr2">
+            <div class="tchip" id="tch">MODO PRUEBA</div>
+            <div class="cchip" id="cch">CAJA 1</div>
+            <div class="ubtn" onclick="toggleDD()">
+                <div class="uav" id="uav">C1</div>
+                <span class="uname" id="uname">Cajero</span>
+                <span class="arrow-down">▾</span>
+                <div class="udrop" id="udd">
+                    <div class="ditem" onclick="doLogout()">🚪 Cerrar Sesión</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="lay">
+
+        <!-- LEFT -->
+        <div class="cl">
+
+            <!-- CLIENTES -->
+            <div class="card">
+                <div class="ch"><div class="cdot db"></div><span class="ctitle">Clientes</span></div>
+                <div class="cb">
+                    <label class="flbl">Número de Cédula</label>
+                    <select class="inp" id="scli" onchange="onCli()">
+                        <option value="">— Seleccionar cliente —</option>
+                    </select>
+                    <div class="clicard" id="clicard">
+                        <div class="clf"><label>Nombre Completo</label><span id="cnomb">—</span></div>
+                        <div class="clf"><label>Cédula</label><span id="cced">—</span></div>
+                        <div class="clf"><label>Dirección</label><span id="cdir">—</span></div>
+                        <div class="clf"><label>Teléfono</label><span id="ctel">—</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCTOS -->
+            <div class="card">
+                <div class="ch"><div class="cdot dg"></div><span class="ctitle">Productos</span></div>
+                <div class="cb">
+                    <div class="prow">
+                        <div>
+                            <label class="flbl">Nombre de Producto</label>
+                            <select class="inp" id="sprod" onchange="onProd()">
+                                <option value="">— Seleccionar producto —</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="flbl">Cantidad</label>
+                            <input type="number" class="inp" id="icant" min="1" value="1"/>
+                        </div>
+                        <button class="bsm badd" onclick="addProd()" style="margin-top:22px">＋ Agregar</button>
+                        <button class="bsm bdel" id="bdel" onclick="delProd()" style="margin-top:22px" disabled>✕ Quitar</button>
+                    </div>
+                    <div class="vmsg" id="cerr"></div>
+                    <div class="tw">
+                        <table class="dtbl">
+                            <thead>
+                            <tr>
+                                <th>ID</th><th>Producto</th><th>P.Unit.</th><th>Cant.</th><th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody id="ctbody">
+                            <tr><td colspan="5" class="te">No hay productos agregados</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tp">
+                        <div class="tr2"><span>Subtotal</span><span class="tv" id="tsub">$0.00</span></div>
+                        <div class="tr2"><span>IVA 15%</span><span class="tv" id="tiva">$0.00</span></div>
+                        <div class="tr2"><span>Total a Pagar</span><span id="ttot">$0.00</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="cr">
+            <div class="card">
+                <div class="ch"><div class="cdot da"></div><span class="ctitle">Venta</span></div>
+                <div class="cb">
+                    <div class="astk">
+                        <div>
+                            <label class="slbl">Forma de Pago</label>
+                            <select class="inp" id="spago">
+                                <option value="">— Seleccionar —</option>
+                                <option value="EFECTIVO">💵 Efectivo</option>
+                                <option value="TRANSFERENCIA">🏦 Transferencia</option>
+                                <option value="TARJETA_DEBITO">💳 Tarjeta de Débito</option>
+                                <option value="TARJETA_CREDITO">💳 Tarjeta de Crédito</option>
+                                <option value="CHEQUE">📄 Cheque</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="slbl">Valor a Pagar ($)</label>
+                            <input type="number" class="minp" id="ipago" placeholder="0.00" min="0" step="0.01" oninput="valPago()"/>
+                            <div class="vmsg" id="perr">El valor no puede ser menor al total.</div>
+                        </div>
+                        <button class="bventa" id="bventa" onclick="showConf()">✓ Generar Venta</button>
+                        <div class="rtag" id="rtag">📋 Registro # <span id="nreg"></span></div>
+                        <button class="bfac" id="bfac" onclick="genFac()">🧾 Generar Factura</button>
+                        <button class="bpdf" id="bpdf" onclick="expPDF()">⬇ Exportar Factura PDF</button>
+                        <!-- Solo visible en modo prueba -->
+                        <button class="bborra" id="bborra" onclick="showBorrar()">🗑 Borrar todas las ventas de prueba</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fp">
+                <div class="fbox" id="fhtml"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAL: Confirmar venta -->
+<div class="ovl" id="modal">
+    <div class="modal">
+        <div class="micon">🛒</div>
+        <div class="mtitle">Confirmar Venta</div>
+        <div class="msub">¿Está seguro de registrar esta venta?</div>
+        <div class="minfo" id="minfo"></div>
+        <div class="mbtns">
+            <button class="bcanc" onclick="closeM('modal')">Cancelar</button>
+            <button class="bconf" onclick="confVenta()">Confirmar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: Borrar ventas de prueba -->
+<div class="ovl" id="modal-borrar">
+    <div class="modal">
+        <div class="micon red">🗑</div>
+        <div class="mtitle">Borrar Ventas de Prueba</div>
+        <div class="msub">Se eliminarán todas las ventas, facturas y detalles del modo prueba.<br/>Esta acción no se puede deshacer.</div>
+        <div class="mbtns">
+            <button class="bcanc" onclick="closeM('modal-borrar')">Cancelar</button>
+            <button class="bconf red" onclick="confBorrar()">Sí, borrar todo</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script src="/Js/app.js"></script>
 </body>

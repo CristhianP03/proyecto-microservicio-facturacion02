@@ -19,6 +19,23 @@ spec:
           image: rccristhianpacheco.azurecr.io/facturacion:latest
           ports:
             - containerPort: 8081
+          env:
+            # ── Base de datos ─────────────────────────────────────────
+            # postgres-db es el nombre del Service de Kubernetes que
+            # apunta al pod de PostgreSQL (definido en postgres-deploy.yaml)
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-db:5432/facturaciondb"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "123456"
+            # ── Microservicios externos ───────────────────────────────
+            # Estas IPs son de VMs con IP pública, accesibles desde AKS.
+            # Si las IPs cambian, solo se actualiza aquí y se hace push.
+            - name: MICROSERVICIO_CLIENTES_URL
+              value: "http://4.206.202.17:8081"
+            - name: MICROSERVICIO_PRODUCTOS_URL
+              value: "http://40.82.168.11:8090"
 ---
 apiVersion: v1
 kind: Service

@@ -17,16 +17,14 @@ public class FacturaController {
         this.facturaService = facturaService;
     }
 
-    @GetMapping("/{idFactura}")
-    public ResponseEntity<Factura> obtenerFacturaPorId(@PathVariable Integer idFactura) {
-        // Análisis Estricto: El service lanza excepción si no existe, aquí retornamos 200 OK
-        return ResponseEntity.ok(facturaService.obtenerPorId(idFactura));
-    }
-
     @GetMapping
     public ResponseEntity<List<Factura>> obtenerTodas() {
         return ResponseEntity.ok(facturaService.obtenerTodas());
     }
 
-    // Nota: El método de generar factura se encuentra en VentaController para mantener el flujo de origen.
+    @GetMapping("/{idFactura}")
+    public ResponseEntity<Factura> obtenerPorId(
+            @PathVariable Integer idFactura) {
+        return ResponseEntity.ok(facturaService.obtenerPorId(idFactura));
+    }
 }
