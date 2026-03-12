@@ -6,37 +6,54 @@ import com.example.microserviciodemo01.Repository.VentaRepository;
 import com.example.microserviciodemo01.models.DetalleVenta;
 import com.example.microserviciodemo01.models.Factura;
 import com.example.microserviciodemo01.models.Venta;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class VentaService {
 
-    private final VentaRepository ventaRepository;
-    private final DetalleVentaRepository detalleVentaRepository;
-    private final FacturaRepository facturaRepository;
+    private static final Logger log = LoggerFactory.getLogger(VentaService.class);
+
+    private final VentaRepository         ventaRepository;
+    private final DetalleVentaRepository  detalleVentaRepository;
+    private final FacturaRepository       facturaRepository;
+    private final RestTemplate            restTemplate;
 
     private static final BigDecimal TASA_IVA = new BigDecimal("0.15");
 
-    // CORRECCIÓN: se agrega FacturaRepository para poder eliminar
-    // facturas asociadas cuando se borran ventas de prueba.
+    @Value("${microservicio.productos.reducir-stock.url:http://20.221.105.223}")
+    private String productosReducirStockBaseUrl;
+
     public VentaService(VentaRepository ventaRepository,
                         DetalleVentaRepository detalleVentaRepository,
-                        FacturaRepository facturaRepository) {
-        this.ventaRepository = ventaRepository;
-        this.detalleVentaRepository = detalleVentaRepository;
-        this.facturaRepository = facturaRepository;
+                        FacturaRepository facturaRepository,
+                        RestTemplate restTemplate) {
+        this.ventaRepository          = ventaRepository;
+        this.detalleVentaRepository   = detalleVentaRepository;
+        this.facturaRepository        = facturaRepository;
+        this.restTemplate             = restTemplate;
     }
 
+    // ----------------------------------------------------------------
     @Transactional
     public Venta crearVenta(Venta venta) {
+
         if (venta.getDetalles() == null || venta.getDetalles().isEmpty()) {
             throw new RuntimeException("La venta debe tener al menos un producto.");
         }
@@ -63,7 +80,12 @@ public class VentaService {
         venta.setTotal(total);
         venta.setFechaVenta(LocalDateTime.now());
         venta.setEstado("COMPLETADA");
-        venta.setNumeroRegistro(generarNumeroRegistro());
+
+        // Contador independiente por modo:
+        // - ventas reales  -> su propia secuencia
+        // - ventas prueba  -> su propia secuencia (reinicia al borrarlas)
+        boolean esPrueba = Boolean.TRUE.equals(venta.getEsModoTest());
+        venta.setNumeroRegistro(generarNumeroRegistro(esPrueba));
 
         for (DetalleVenta detalle : venta.getDetalles()) {
             detalle.setVenta(venta);
@@ -73,22 +95,70 @@ public class VentaService {
             detalle.setTotal(totalDetalle);
         }
 
-        return ventaRepository.save(venta);
+        Venta ventaGuardada = ventaRepository.save(venta);
+
+        // Reducir stock solo para ventas reales.
+        // esModoTest = true nunca afecta el stock.
+        if (!esPrueba) {
+            reducirStockProductos(ventaGuardada);
+        }
+
+        return ventaGuardada;
     }
 
-    private String generarNumeroRegistro() {
-        String ultimo = ventaRepository.findUltimoNumeroRegistro().orElse(null);
+    // ----------------------------------------------------------------
+    /**
+     * Genera numeroRegistro con secuencia separada por modo.
+     * Al borrar las ventas de prueba el MAX queda null
+     * y la proxima venta de prueba empieza en 000000001.
+     */
+    private String generarNumeroRegistro(boolean esModoTest) {
+        String ultimo = ventaRepository
+                .findUltimoNumeroRegistroPorModo(esModoTest)
+                .orElse(null);
         int siguiente = 1;
         if (ultimo != null) {
-            try {
-                siguiente = Integer.parseInt(ultimo) + 1;
-            } catch (NumberFormatException e) {
-                siguiente = 1;
-            }
+            try { siguiente = Integer.parseInt(ultimo) + 1; }
+            catch (NumberFormatException e) { siguiente = 1; }
         }
         return String.format("%09d", siguiente);
     }
 
+    // ----------------------------------------------------------------
+    /**
+     * PUT /api/productos/reducir-stock
+     * Body: [{ "idProducto": int, "cantidad": int, "precioVenta": double }]
+     * Metodo PUT confirmado por Postman y Swagger del equipo de productos.
+     *
+     * Si falla (timeout, servicio caido) la venta NO se revierte.
+     * El error queda en el log para revision manual.
+     */
+    private void reducirStockProductos(Venta venta) {
+        try {
+            List<Map<String, Object>> payload = venta.getDetalles().stream()
+                    .map(d -> Map.<String, Object>of(
+                            "idProducto",  d.getIdProducto(),
+                            "cantidad",    d.getCantidad(),
+                            "precioVenta", d.getPrecioUnitario().doubleValue()
+                    ))
+                    .collect(Collectors.toList());
+
+            String url = productosReducirStockBaseUrl + "/api/productos/reducir-stock";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<List<Map<String, Object>>> request = new HttpEntity<>(payload, headers);
+
+            restTemplate.exchange(url, HttpMethod.PUT, request, Void.class);
+            log.info("Stock reducido correctamente para venta #{}", venta.getNumeroRegistro());
+
+        } catch (Exception e) {
+            log.error("ERROR al reducir stock para venta #{}: {}",
+                    venta.getNumeroRegistro(), e.getMessage());
+        }
+    }
+
+    // ----------------------------------------------------------------
     @Transactional(readOnly = true)
     public List<Venta> listarVentas() {
         return ventaRepository.findAll();
@@ -100,10 +170,12 @@ public class VentaService {
                 .orElseThrow(() -> new RuntimeException("Venta no encontrada: " + idVenta));
     }
 
+    // ----------------------------------------------------------------
     /**
-     * Elimina todas las ventas marcadas como esModoTest = true,
-     * junto con sus facturas y detalles asociados.
-     * Este método solo es llamado desde TestController (modo prueba).
+     * Borra todas las ventas marcadas como esModoTest = true,
+     * junto con sus facturas y detalles.
+     * Despues del borrado el MAX de numeroRegistro para prueba es null,
+     * por lo que la proxima venta de prueba reinicia en 000000001.
      */
     @Transactional
     public void eliminarVentasPrueba() {
@@ -112,18 +184,15 @@ public class VentaService {
                 .collect(Collectors.toList());
 
         for (Venta v : ventasPrueba) {
-            // 1. Eliminar factura asociada si existe (los DetalleFactura
-            //    se eliminan en cascada si la entidad Factura tiene
-            //    CascadeType.ALL en su relación con DetalleFactura).
-            Optional<Factura> factura = facturaRepository.findByVenta_IdVenta(v.getIdVenta());
+            Optional<Factura> factura =
+                    facturaRepository.findByVenta_IdVenta(v.getIdVenta());
             factura.ifPresent(facturaRepository::delete);
 
-            // 2. Eliminar los detalles de la venta
-            List<DetalleVenta> detalles = detalleVentaRepository.findByVenta_IdVenta(v.getIdVenta());
+            List<DetalleVenta> detalles =
+                    detalleVentaRepository.findByVenta_IdVenta(v.getIdVenta());
             detalleVentaRepository.deleteAll(detalles);
         }
 
-        // 3. Eliminar las ventas de prueba
         ventaRepository.deleteAll(ventasPrueba);
     }
 }

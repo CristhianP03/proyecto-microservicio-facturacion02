@@ -17,7 +17,7 @@ public class Venta {
     @Column(name = "id_venta")
     private Integer idVenta;
 
-    @Column(name = "numero_registro", nullable = false, unique = true)
+    @Column(name = "numero_registro", nullable = false)
     private String numeroRegistro;
 
     @Column(name = "id_cajero", nullable = false)

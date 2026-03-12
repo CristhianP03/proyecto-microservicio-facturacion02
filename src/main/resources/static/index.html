@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>CompuTech — Punto de Venta</title>
+    <title>CompuTech - Punto de Venta</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="/Css/styles.css"/>
 </head>
 <body>
 
-<!-- ══════════════ LOGIN ══════════════ -->
+<!-- ═══════════════════════════════ LOGIN ═══════════════════════════════ -->
 <div id="ls">
     <div class="lbg"></div>
     <div class="lw">
@@ -17,46 +17,48 @@
             <div class="lb-name">Compu<span>Tech</span></div>
             <div class="lb-sub">Sistema de Punto de Venta para<br/>Tienda de Componentes de Computadora</div>
             <div class="lb-pills">
-                <span class="lp">🖥️ Componentes PC</span>
-                <span class="lp">🧾 Facturación</span>
-                <span class="lp">📦 Inventario</span>
-                <span class="lp">👥 Clientes</span>
+                <span class="lp">Componentes PC</span>
+                <span class="lp">Facturacion</span>
+                <span class="lp">Inventario</span>
+                <span class="lp">Clientes</span>
             </div>
         </div>
         <div class="lc">
-            <div class="lc-title">Iniciar Sesión</div>
+            <div class="lc-title">Iniciar Sesion</div>
             <div class="lc-sub">Ingresa tus credenciales de cajero</div>
-            <div class="ff"><label class="fl">Usuario</label>
+            <div class="ff">
+                <label class="fl">Usuario</label>
                 <input class="fi" type="text" id="lu" placeholder="cajero1" autocomplete="off"/>
             </div>
-            <div class="ff"><label class="fl">Contraseña</label>
-                <input class="fi" type="password" id="lp2" placeholder="••••••"/>
+            <div class="ff">
+                <label class="fl">Contrasena</label>
+                <input class="fi" type="password" id="lp2" placeholder="****"/>
             </div>
             <div style="margin-top:20px">
-                <button class="btn-norm" onclick="doLogin(false)">→ Ingresar al Sistema</button>
+                <button class="btn-norm" onclick="doLogin(false)">Ingresar al Sistema</button>
             </div>
             <div class="ldiv">
                 <div class="ldl"></div><span class="ldt">o</span><div class="ldl"></div>
             </div>
-            <button class="btn-test" onclick="doLogin(true)">🧪 Entrar en Modo Prueba</button>
+            <button class="btn-test" onclick="doLogin(true)">Entrar en Modo Prueba</button>
             <div style="text-align:center;margin-top:8px">
-                <span class="login-hint">Modo prueba: datos de ejemplo · facturas aisladas · no afecta inventario</span>
+                <span class="login-hint">Modo prueba: ingresa cajero_prueba / 1234</span>
             </div>
             <div class="lerr" id="lerr"></div>
         </div>
     </div>
 </div>
 
-<!-- ══════════════ MAIN ══════════════ -->
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════ -->
 <div id="ms">
 
     <div class="tbanner" id="tb">
-        🧪 MODO PRUEBA — Datos de ejemplo · Facturas aisladas · El endpoint de inventario rechaza estas ventas
+        MODO PRUEBA - Datos de ejemplo - Facturas aisladas - No afecta inventario
     </div>
 
     <header class="hdr">
         <div class="hl">
-            <div class="hlogo">🖥️</div>
+            <div class="hlogo">CT</div>
             <div class="htitle">Compu<span>Tech</span></div>
         </div>
         <div class="hcenter">Tienda de Componentes de Computadora</div>
@@ -66,9 +68,9 @@
             <div class="ubtn" onclick="toggleDD()">
                 <div class="uav" id="uav">C1</div>
                 <span class="uname" id="uname">Cajero</span>
-                <span class="arrow-down">▾</span>
+                <span class="arrow-down">v</span>
                 <div class="udrop" id="udd">
-                    <div class="ditem" onclick="doLogout()">🚪 Cerrar Sesión</div>
+                    <div class="ditem" onclick="doLogout()">Cerrar Sesion</div>
                 </div>
             </div>
         </div>
@@ -76,22 +78,28 @@
 
     <div class="lay">
 
-        <!-- LEFT -->
+        <!-- ── LEFT ── -->
         <div class="cl">
 
             <!-- CLIENTES -->
             <div class="card">
                 <div class="ch"><div class="cdot db"></div><span class="ctitle">Clientes</span></div>
                 <div class="cb">
-                    <label class="flbl">Número de Cédula</label>
-                    <select class="inp" id="scli" onchange="onCli()">
-                        <option value="">— Seleccionar cliente —</option>
-                    </select>
+                    <label class="flbl">Cedula del Cliente</label>
+                    <div class="sdd" id="sdd-cli">
+                        <input class="sdd-input" id="inp-cli" type="text"
+                               placeholder="Escriba la cedula para buscar..."
+                               autocomplete="off"
+                               oninput="filtrarClientes()"
+                               onfocus="abrirDrop('cli')"
+                               onkeydown="navDrop(event,'cli')"/>
+                        <div class="sdd-list" id="list-cli"></div>
+                    </div>
                     <div class="clicard" id="clicard">
-                        <div class="clf"><label>Nombre Completo</label><span id="cnomb">—</span></div>
-                        <div class="clf"><label>Cédula</label><span id="cced">—</span></div>
-                        <div class="clf"><label>Dirección</label><span id="cdir">—</span></div>
-                        <div class="clf"><label>Teléfono</label><span id="ctel">—</span></div>
+                        <div class="clf"><label>Nombre Completo</label><span id="cnomb">-</span></div>
+                        <div class="clf"><label>Cedula</label><span id="cced">-</span></div>
+                        <div class="clf"><label>Direccion</label><span id="cdir">-</span></div>
+                        <div class="clf"><label>Telefono</label><span id="ctel">-</span></div>
                     </div>
                 </div>
             </div>
@@ -103,24 +111,28 @@
                     <div class="prow">
                         <div>
                             <label class="flbl">Nombre de Producto</label>
-                            <select class="inp" id="sprod" onchange="onProd()">
-                                <option value="">— Seleccionar producto —</option>
-                            </select>
+                            <div class="sdd" id="sdd-prod">
+                                <input class="sdd-input" id="inp-prod" type="text"
+                                       placeholder="Escriba para buscar producto..."
+                                       autocomplete="off"
+                                       oninput="filtrarProductos()"
+                                       onfocus="abrirDrop('prod')"
+                                       onkeydown="navDrop(event,'prod')"/>
+                                <div class="sdd-list" id="list-prod"></div>
+                            </div>
                         </div>
                         <div>
                             <label class="flbl">Cantidad</label>
                             <input type="number" class="inp" id="icant" min="1" value="1"/>
                         </div>
-                        <button class="bsm badd" onclick="addProd()" style="margin-top:22px">＋ Agregar</button>
-                        <button class="bsm bdel" id="bdel" onclick="delProd()" style="margin-top:22px" disabled>✕ Quitar</button>
+                        <button class="bsm badd" onclick="addProd()" style="margin-top:22px">+ Agregar</button>
+                        <button class="bsm bdel" id="bdel" onclick="delProd()" style="margin-top:22px" disabled>x Quitar</button>
                     </div>
                     <div class="vmsg" id="cerr"></div>
                     <div class="tw">
                         <table class="dtbl">
                             <thead>
-                            <tr>
-                                <th>ID</th><th>Producto</th><th>P.Unit.</th><th>Cant.</th><th>Total</th>
-                            </tr>
+                            <tr><th>Img.</th><th>ID</th><th>Producto</th><th>P.Unit.</th><th>Cant.</th><th>Total</th></tr>
                             </thead>
                             <tbody id="ctbody">
                             <tr><td colspan="5" class="te">No hay productos agregados</td></tr>
@@ -137,38 +149,52 @@
 
         </div>
 
-        <!-- RIGHT -->
+        <!-- ── RIGHT ── -->
         <div class="cr">
             <div class="card">
                 <div class="ch"><div class="cdot da"></div><span class="ctitle">Venta</span></div>
                 <div class="cb">
                     <div class="astk">
+
                         <div>
                             <label class="slbl">Forma de Pago</label>
-                            <select class="inp" id="spago">
-                                <option value="">— Seleccionar —</option>
-                                <option value="EFECTIVO">💵 Efectivo</option>
-                                <option value="TRANSFERENCIA">🏦 Transferencia</option>
-                                <option value="TARJETA_DEBITO">💳 Tarjeta de Débito</option>
-                                <option value="TARJETA_CREDITO">💳 Tarjeta de Crédito</option>
-                                <option value="CHEQUE">📄 Cheque</option>
+                            <select class="inp" id="spago" onchange="onFormaPago()">
+                                <option value="">- Seleccionar -</option>
+                                <option value="EFECTIVO">Efectivo</option>
+                                <option value="TRANSFERENCIA">Transferencia</option>
+                                <option value="TARJETA_DEBITO">Tarjeta de Debito</option>
+                                <option value="TARJETA_CREDITO">Tarjeta de Credito</option>
+                                <option value="CHEQUE">Cheque</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="slbl">Valor a Pagar ($)</label>
-                            <input type="number" class="minp" id="ipago" placeholder="0.00" min="0" step="0.01" oninput="valPago()"/>
+
+                        <!-- Solo visible cuando la forma de pago es EFECTIVO -->
+                        <div id="bloque-pago" style="display:none">
+                            <label class="slbl">Valor Entregado ($)</label>
+                            <input type="number" class="minp" id="ipago"
+                                   placeholder="0.00" min="0" step="0.01" oninput="valPago()"/>
                             <div class="vmsg" id="perr">El valor no puede ser menor al total.</div>
                         </div>
-                        <button class="bventa" id="bventa" onclick="showConf()">✓ Generar Venta</button>
-                        <div class="rtag" id="rtag">📋 Registro # <span id="nreg"></span></div>
-                        <button class="bfac" id="bfac" onclick="genFac()">🧾 Generar Factura</button>
-                        <button class="bpdf" id="bpdf" onclick="expPDF()">⬇ Exportar Factura PDF</button>
-                        <!-- Solo visible en modo prueba -->
-                        <button class="bborra" id="bborra" onclick="showBorrar()">🗑 Borrar todas las ventas de prueba</button>
+
+                        <button class="bventa" id="bventa" onclick="showConf()">Registrar Venta</button>
+
+                        <div class="rtag" id="rtag">Registro # <span id="nreg"></span></div>
+
+                        <!-- Aparece tras registrar la venta -->
+                        <button class="bfac"   id="bfac"   onclick="genFac()">Generar Factura</button>
+
+                        <!-- Aparecen tras generar la factura -->
+                        <button class="bpdf"   id="bpdf"   onclick="expPDF()">Descargar Factura PDF</button>
+                        <button class="bnueva" id="bnueva" onclick="nuevaVenta()">+ Nueva Venta</button>
+
+                        <!-- Solo en modo prueba -->
+                        <button class="bborra" id="bborra" onclick="showBorrar()">Borrar ventas de prueba</button>
+
                     </div>
                 </div>
             </div>
 
+            <!-- Vista previa de factura -->
             <div id="fp">
                 <div class="fbox" id="fhtml"></div>
             </div>
@@ -180,9 +206,9 @@
 <!-- MODAL: Confirmar venta -->
 <div class="ovl" id="modal">
     <div class="modal">
-        <div class="micon">🛒</div>
+        <div class="micon">V</div>
         <div class="mtitle">Confirmar Venta</div>
-        <div class="msub">¿Está seguro de registrar esta venta?</div>
+        <div class="msub">Esta seguro de registrar esta venta?</div>
         <div class="minfo" id="minfo"></div>
         <div class="mbtns">
             <button class="bcanc" onclick="closeM('modal')">Cancelar</button>
@@ -194,18 +220,21 @@
 <!-- MODAL: Borrar ventas de prueba -->
 <div class="ovl" id="modal-borrar">
     <div class="modal">
-        <div class="micon red">🗑</div>
+        <div class="micon red">!</div>
         <div class="mtitle">Borrar Ventas de Prueba</div>
-        <div class="msub">Se eliminarán todas las ventas, facturas y detalles del modo prueba.<br/>Esta acción no se puede deshacer.</div>
+        <div class="msub">Se eliminaran todas las ventas, facturas y detalles de prueba.<br/>El contador reiniciara en 000000001. Esta accion no se puede deshacer.</div>
         <div class="mbtns">
             <button class="bcanc" onclick="closeM('modal-borrar')">Cancelar</button>
-            <button class="bconf red" onclick="confBorrar()">Sí, borrar todo</button>
+            <button class="bconf red" onclick="confBorrar()">Si, borrar todo</button>
         </div>
     </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<!-- jsPDF cargado ANTES de app.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="/Js/app.js"></script>
 </body>
 </html>
+
