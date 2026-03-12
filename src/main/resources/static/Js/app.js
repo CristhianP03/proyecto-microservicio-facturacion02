@@ -870,7 +870,6 @@ function limpiar() {
     document.getElementById('bdel').disabled        = true;
     document.getElementById('cerr').style.display   = 'none';
 }
-
 // ================================================================
 // TOAST
 // ================================================================
